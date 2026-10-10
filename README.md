@@ -409,6 +409,14 @@ Alternatively, install the latest version of this fork using [BRAT](https://gith
 3. Open the following URL in the browser: `obsidian://brat?plugin=Heluojiang/obsidian-pdf-plus`.
 4. Click the "Add Plugin" button.
 
+### Interface language
+
+The user interface is available in **English** and **简体中文 (Simplified Chinese)**. It follows
+Obsidian's own display language — set it under **Settings → General → Language**, then reload the
+plugin (or restart Obsidian) for the change to take effect. There is no separate language setting.
+
+Any language other than Chinese falls back to English.
+
 ## Credits
 
 PDF++ is built on top of Obsidian's native PDF viewer powered by [Mozilla's PDF.js](https://mozilla.github.io/pdf.js/), which is already pretty good even without PDF++.
@@ -422,6 +430,21 @@ PDF++ offers two ways to highlight text in PDF: one that does not involve modify
 The latter is powered by the pdf-lib, a JavaScript library for creating and modifying PDF documents. The [original project](https://github.com/Hopding/pdf-lib) was created by Andrew Dillon. PDF++ uses a [forked version](https://github.com/cantoo-scribe/pdf-lib) maintained by Cantoo Scribe.
 
 PDF++ also supports Vim-like keybindings. Its design was inspired by [codemirror-vim](https://github.com/replit/codemirror-vim) and [Tridactyl](https://github.com/tridactyl/tridactyl). Especially, [some code for the link mode](https://github.com/RyotaUshio/obsidian-pdf-plus/blob/main/src/vim/hintnames.ts) was borrowed from Tridactyl, which is [distributed under the Apache 2.0 License](https://github.com/tridactyl/tridactyl?tab=License-1-ov-file) by Colin Caine, Oliver Blanthorn and Koushien with some modification.
+
+### Interface localization (this fork)
+
+The user-interface localization in this fork was **not** written from scratch. It builds on the work
+of [@BcLee012](https://github.com/BcLee012), who proposed it upstream and has not had it merged yet:
+
+- [#586 — [FR] i18n: extract UI strings into a locale table + add Simplified Chinese](https://github.com/RyotaUshio/obsidian-pdf-plus/issues/586)
+- [#587 — refactor: extract user-facing strings into a locale table (i18n groundwork)](https://github.com/RyotaUshio/obsidian-pdf-plus/pull/587)
+- [#588 — feat: add Simplified Chinese (zh) locale](https://github.com/RyotaUshio/obsidian-pdf-plus/pull/588)
+
+This fork applies #587 and #588 as-is, then adds the strings those pull requests left hard-coded —
+the update notice, the deprecated-setting notices, the Dataview migration modal, part of the
+settings tab, and others — plus the Simplified Chinese for them. See
+[`scripts/I18N.md`](scripts/I18N.md) for the conventions and
+`scripts/scan-ui-strings.mjs` for the check that keeps it complete.
 
 ## Compatibility
 

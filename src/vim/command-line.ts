@@ -25,7 +25,7 @@ export class VimCommandLineMode extends VimBindingsMode {
             this.register(() => el.remove());
             el.appendText(':');
             this.inputEl = el.createEl('input', { cls: 'pdf-plus-vim-command-input' }, (inputEl) => {
-                inputEl.placeholder = 'type a command or page number...';
+                inputEl.placeholder = t('vimCommandLine.type-a-command.placeholder');
 
                 inputEl.addEventListener('focusout', () => {
                     setTimeout(() => {
@@ -108,7 +108,7 @@ export class VimCommandLineMode extends VimBindingsMode {
         // shell command
         if (cmd.startsWith('!')) {
             if (!Platform.isDesktopApp) {
-                this.reportError(`${this.plugin.manifest.name} (Vim mode): Shell command is not supported on mobile`, options.error!);
+                this.reportError(t('vimCommandLine.shell-command-is-not-supported-on-mobile.notice', { plugin: this.plugin.manifest.name }), options.error!);
                 return;
             }
 
@@ -135,13 +135,13 @@ export class VimCommandLineMode extends VimBindingsMode {
         const excmd = this.findCommand(excmdName);
         if (excmd) {
             if (excmd.minNargs && args.length < excmd.minNargs) {
-                this.reportError(`${this.plugin.manifest.name} (Vim mode): Expected ${excmd.minNargs} or more arguments for command "${excmd.id}" but got ${args.length}`, options.error!);
+                this.reportError(t('vimCommandLine.not-enough-arguments-for-command.notice', { plugin: this.plugin.manifest.name, v0: excmd.minNargs, v1: excmd.id, v2: args.length }), options.error!);
                 return;
             }
             return excmd.func(...args);
         }
 
-        this.reportError(`${this.plugin.manifest.name} (Vim mode): Unknown command "${cmd}"`, options.error!);
+        this.reportError(t('vimCommandLine.unknown-command.notice', { plugin: this.plugin.manifest.name, v0: cmd }), options.error!);
     }
 
     findCommand(excmdName: string) {

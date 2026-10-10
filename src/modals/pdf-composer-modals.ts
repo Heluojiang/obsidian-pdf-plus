@@ -31,10 +31,10 @@ export class PDFPageDeleteModal extends PDFPlusModal {
     onOpen() {
         super.onOpen();
 
-        this.titleEl.setText(`${this.plugin.manifest.name}: delete page`);
-        this.contentEl.createEl('p', { text: 'Are you sure you want to delete this page?' });
+        this.titleEl.setText(t('modalsPdfComposerModals.delete-page.title', { plugin: this.plugin.manifest.name }));
+        this.contentEl.createEl('p', { text: t('modalsPdfComposerModals.are-you-sure-you-want-to-delete-this-page') });
         if (!this.plugin.settings.warnEveryAnnotationDelete) {
-            this.contentEl.createEl('p', { cls: 'mod-warning', text: 'There are one or more links pointing to this page.' });
+            this.contentEl.createEl('p', { cls: 'mod-warning', text: t('modalsPdfComposerModals.links-pointing-to-this-page') });
         }
 
         new Setting(this.contentEl)
@@ -130,7 +130,7 @@ export class PDFComposerModal extends PDFPlusModal {
 
     onOpen() {
         super.onOpen();
-        this.titleEl.setText(`${this.plugin.manifest.name}: Page composer`);
+        this.titleEl.setText(t('modalsPdfComposerModals.page-composer.title', { plugin: this.plugin.manifest.name }));
 
         let pageLabelUpdateMethod = this.defaultMethod;
         let inPlace = this.defaultInPlace;
@@ -139,7 +139,7 @@ export class PDFComposerModal extends PDFPlusModal {
             new Setting(this.contentEl)
                 .setName(t('modalsPdfComposerModals.update-the-page-labels'))
                 .setDesc(createFragment((el) => {
-                    el.createEl('a', { text: 'Learn more', href: 'https://github.com/RyotaUshio/obsidian-pdf-plus/wiki/Page-labels' });
+                    el.createEl('a', { text: t('modalsPdfComposerModals.learn-more'), href: 'https://github.com/RyotaUshio/obsidian-pdf-plus/wiki/Page-labels' });
                 }))
                 .addDropdown((dropdown) => {
                     dropdown
@@ -208,7 +208,7 @@ export class PDFCreateModal extends PDFPlusModal {
     onOpen() {
         super.onOpen();
 
-        this.titleEl.setText(`${this.plugin.manifest.name}: Create new PDF`);
+        this.titleEl.setText(t('modalsPdfComposerModals.create-new-pdf.title', { plugin: this.plugin.manifest.name }));
 
         this.addSetting()
             .setName(t('modalsPdfComposerModals.page-size'))
@@ -229,8 +229,8 @@ export class PDFCreateModal extends PDFPlusModal {
             .setName(t('modalsPdfComposerModals.orientation'))
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOption('portrait', 'Portrait')
-                    .addOption('landscape', 'Landscape')
+                    .addOption('portrait', t('modalsPdfComposerModals.orientation.option.portrait'))
+                    .addOption('landscape', t('modalsPdfComposerModals.orientation.option.landscape'))
                     .setValue(this.orientation)
                     .onChange((value) => {
                         if (value === 'portrait' || value === 'landscape') {

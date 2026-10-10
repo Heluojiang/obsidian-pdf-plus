@@ -31,12 +31,12 @@ export class DummyFileModal extends PDFPlusModal {
         }
         this.folderPath = this.lib.dummyFileManager.getFolderPathForDummyFiles(this.app.workspace.getActiveFile());
 
-        this.titleEl.setText(`${this.plugin.manifest.name}: Create dummy file for external PDF`);
+        this.titleEl.setText(t('modalsDummyFileModals.create-dummy-file-for-external-pdf.title', { plugin: this.plugin.manifest.name }));
         this.modalEl.createDiv('', (div) => {
             new Setting(div).setDesc(createFragment((el) => {
                 const keys = this.plugin.settings.modifierToDropExternalPDFToCreateDummy;
                 el.appendText(t('modalsDummyFileModals.you-can-also-use-v0-drag-drop-to-create.help', { v0: keys.length ? (keys.map(getModifierNameInPlatform).join('+') + ' +') : '' }));
-                el.createEl('a', { text: 'Learn more about dummy PDF files', href: 'https://ryotaushio.github.io/obsidian-pdf-plus/external-pdf-files' });
+                el.createEl('a', { text: t('modalsDummyFileModals.learn-more-about-dummy-pdf-files'), href: 'https://ryotaushio.github.io/obsidian-pdf-plus/external-pdf-files' });
             }));
             setTimeout(() => {
                 this.modalEl.insertBefore(div, this.contentEl);
@@ -89,8 +89,8 @@ export class DummyFileModal extends PDFPlusModal {
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        'file': 'On this computer',
-                        'web': 'Web'
+                        'file': t('modalsDummyFileModals.source-location.option.file'),
+                        'web': t('modalsDummyFileModals.source-location.option.web')
                     })
                     .setValue(this.source ?? '')
                     .onChange((value: 'file' | 'web') => {
@@ -132,7 +132,7 @@ export class DummyFileModal extends PDFPlusModal {
                         const paths: string[] | undefined = window.electron?.remote.dialog.showOpenDialogSync({
                             properties: ['openFile', 'multiSelections', 'dontAddToRecent'],
                             filters: [
-                                { name: 'PDF files', extensions: ['pdf'] }
+                                { name: t('modalsDummyFileModals.pdf-files'), extensions: ['pdf'] }
                             ]
                         });
                         if (paths && paths.length > 0) {
@@ -198,7 +198,7 @@ export class DummyFileModal extends PDFPlusModal {
                 .addExtraButton((button) => {
                     button
                         .setIcon('trash')
-                        .setTooltip(t('modalsDummyFileModals.remove-this.tooltip', { v0: this.source === 'file' ? 'file' : 'URL' }))
+                        .setTooltip(t('modalsDummyFileModals.remove-this.tooltip', { v0: this.source === 'file' ? t('modalsDummyFileModals.remove-this.import-source-file') : t('modalsDummyFileModals.remove-this.import-source-url') }))
                         .onClick(() => {
                             this.uris.splice(i, 1);
                             this.display();
@@ -212,13 +212,13 @@ export class DummyFileModal extends PDFPlusModal {
 
     addButtons() {
         this.contentEl.createDiv('modal-button-container', (buttonContainerEl) => {
-            buttonContainerEl.createEl('button', { text: 'Create', cls: 'mod-cta' }, (buttonEl) => {
+            buttonContainerEl.createEl('button', { text: t('modalsDummyFileModals.create'), cls: 'mod-cta' }, (buttonEl) => {
                 buttonEl.addEventListener('click', () => {
                     this.submit();
                 });
             });
 
-            buttonContainerEl.createEl('button', { text: 'Cancel' }, (buttonEl) => {
+            buttonContainerEl.createEl('button', { text: t('modalsDummyFileModals.cancel') }, (buttonEl) => {
                 buttonEl.addEventListener('click', () => {
                     this.close();
                 });

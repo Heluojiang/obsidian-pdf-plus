@@ -315,7 +315,7 @@ export default class PDFPlus extends Plugin {
 					const linkEl = createEl('a', {
 						href: 'obsidian://pdf-plus?setting=' + settingId
 					});
-					el.append('PDF++: ');
+					el.append(t('main.deprecated-setting-notice.prefix'));
 					setMessage(el, linkEl);
 				}));
 			notice.containerEl.addClass('pdf-plus-deprecated-setting-notice');
@@ -326,10 +326,10 @@ export default class PDFPlus extends Plugin {
 
 		if (this.settings.trimSelectionEmbed) {
 			showNotice('trimSelectionEmbed', (el, linkEl) => {
-				el.append('The option ');
-				linkEl.textContent = 'Trim selection/annotation embeds';
+				el.append(t('main.trimSelectionEmbed.notice'));
+				linkEl.textContent = t('main.trimSelectionEmbed.notice-2');
 				el.append(linkEl);
-				el.append(' is deprecated and will be removed in the near future. It is recommended to disable it and use the rectangular selection tool instead.');
+				el.append(t('main.trimSelectionEmbed.notice-3'));
 			});
 		}
 
@@ -361,18 +361,18 @@ export default class PDFPlus extends Plugin {
 
 			if (shouldShowNotice) {
 				showNotice(settingId, (el, linkEl) => {
-					el.append('The template variables ');
+					el.append(t('main.deprecated-template-variables.notice'));
 					el.createEl('code', {
 						text: 'linkedFile'
 					});
-					el.append(' and ');
+					el.append(t('main.deprecated-template-variables.notice-2'));
 					el.createEl('code', {
 						text: 'linkedFileProperties'
 					});
-					el.append(' are deprecated and will be removed in the near future. Please ');
-					linkEl.textContent = 'remove them from your templates';
+					el.append(t('main.deprecated-template-variables.notice-3'));
+					linkEl.textContent = t('main.deprecated-template-variables.remove');
 					el.append(linkEl);
-					el.append('.');
+					el.append(t('main.deprecated-template-variables.notice-4'));
 				});
 			}
 		};
@@ -403,18 +403,18 @@ export default class PDFPlus extends Plugin {
 
 			const notice = new Notice(
 				createFragment((el) => el.append(
-					`PDF++: Please consider moving the "${this.settings.proxyMDProperty}" Dataview inline fields to the properties (YAML frontmatter).`,
+					t('main.dataview-inline-fields.notice', { propertyName: this.settings.proxyMDProperty }),
 					createEl('br'),
-					'Click ',
+					t('main.dataview-inline-fields.help'),
 					createEl('a', {
-						text: 'here'
+						text: t('main.dataview-inline-fields.help-2')
 					}, (a) => {
 						a.onclick = () => {
 							new DataviewInlineFieldsModal(this, files)
 								.open();
 						};
 					}),
-					' for more details.',
+					t('main.dataview-inline-fields.help-3'),
 				)),
 				0
 			);
@@ -468,7 +468,7 @@ export default class PDFPlus extends Plugin {
 		if (this.settings.autoFocusToggleRibbonIcon) {
 			let menuShown = false;
 
-			this.autoFocusToggleIconEl = this.addRibbonIcon(this.settings.autoFocusIconName, `${this.manifest.name}: Toggle auto-focus`, () => {
+			this.autoFocusToggleIconEl = this.addRibbonIcon(this.settings.autoFocusIconName, t('main.toggle-auto-focus', { plugin: this.manifest.name }), () => {
 				if (!menuShown) this.toggleAutoFocus();
 			});
 			this.autoFocusToggleIconEl.toggleClass('is-active', this.settings.autoFocus);
@@ -493,7 +493,7 @@ export default class PDFPlus extends Plugin {
 		if (this.settings.autoPasteToggleRibbonIcon) {
 			let menuShown = false;
 
-			this.autoPasteToggleIconEl = this.addRibbonIcon(this.settings.autoPasteIconName, `${this.manifest.name}: Toggle auto-paste`, () => {
+			this.autoPasteToggleIconEl = this.addRibbonIcon(this.settings.autoPasteIconName, t('main.toggle-auto-paste', { plugin: this.manifest.name }), () => {
 				if (!menuShown) this.toggleAutoPaste();
 			});
 			this.autoPasteToggleIconEl.toggleClass('is-active', this.settings.autoPaste);
@@ -777,9 +777,9 @@ export default class PDFPlus extends Plugin {
 			this.app.workspace.onLayoutReady(() => {
 				new Notice(createFragment((el) => {
 					el.append(
-						'PDF++: There is a newer version available! ',
+						t('main.update-available.notice'),
 						createEl('a', {
-							text: 'Update now',
+							text: t('main.update-now'),
 							// Not obsidian://show-plugin?id=pdf-plus: that opens the community plugin page
 							// of the upstream repository, which would replace this fork's build with it.
 							href: 'https://github.com/Heluojiang/obsidian-pdf-plus/releases/latest',
@@ -798,32 +798,32 @@ export default class PDFPlus extends Plugin {
 	private registerHoverLinkSources() {
 		this.registerHoverLinkSource('pdf-plus', {
 			defaultMod: true,
-			display: 'PDF++: backlink highlights'
+			display: t('main.hover-link-source.backlink-highlights')
 		});
 
 		this.registerHoverLinkSource(PDFInternalLinkPostProcessor.HOVER_LINK_SOURCE_ID, {
 			defaultMod: true,
-			display: 'PDF++: internal links in PDF (except for citations)'
+			display: t('main.hover-link-source.internal-links')
 		});
 
 		this.registerHoverLinkSource(BibliographyManager.HOVER_LINK_SOURCE_ID, {
 			defaultMod: false,
-			display: 'PDF++: citation links in PDF'
+			display: t('main.hover-link-source.citation-links')
 		});
 
 		this.registerHoverLinkSource(PDFExternalLinkPostProcessor.HOVER_LINK_SOURCE_ID, {
 			defaultMod: true,
-			display: 'PDF++: external links in PDF'
+			display: t('main.hover-link-source.external-links')
 		});
 
 		this.registerHoverLinkSource(PDFOutlineItemPostProcessor.HOVER_LINK_SOURCE_ID, {
 			defaultMod: true,
-			display: 'PDF++: outlines (bookmarks)'
+			display: t('main.hover-link-source.outlines')
 		});
 
 		this.registerHoverLinkSource(PDFThumbnailItemPostProcessor.HOVER_LINK_SOURCE_ID, {
 			defaultMod: true,
-			display: 'PDF++: thumbnails'
+			display: t('main.hover-link-source.thumbnails')
 		});
 	}
 

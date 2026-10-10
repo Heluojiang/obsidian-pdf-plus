@@ -23,3 +23,6 @@ data.json
 
 # Anystyle input files
 anystyle/
+
+# Transient fragments consumed by scripts/merge-locale-fragments.mjs
+scripts/.i18n/

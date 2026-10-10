@@ -1129,7 +1129,7 @@ export class PDFPlusLib {
             return {
                 success: false,
                 shouldUpdate: false,
-                detail: 'Failed to connect to GitHub to check for updates.',
+                detail: t('libIndex.failed-to-connect-to-github-to-check-for-update.detail'),
             };
         }
 
@@ -1145,14 +1145,14 @@ export class PDFPlusLib {
             return {
                 success: false,
                 shouldUpdate: false,
-                detail: 'Failed to parse JSON releases from GitHub.',
+                detail: t('libIndex.failed-to-parse-json-releases-from-github.detail'),
             };
         }
         if (!Array.isArray(releases) || releases.length === 0) {
             return {
                 success: false,
                 shouldUpdate: false,
-                detail: 'No releases found on GitHub.',
+                detail: t('libIndex.no-releases-found-on-github.detail'),
             };
         }
 
@@ -1169,7 +1169,7 @@ export class PDFPlusLib {
             return {
                 success: true,
                 shouldUpdate: false,
-                detail: 'Already up-to-date.',
+                detail: t('libIndex.already-up-to-date.detail'),
             };
         }
 
@@ -1183,7 +1183,7 @@ export class PDFPlusLib {
             return {
                 success: true,
                 shouldUpdate: true,
-                detail: 'There is a newer version that should be updated to immediately.',
+                detail: t('libIndex.there-is-a-newer-version-that-should-be-upda.detail'),
             };
         }
 
@@ -1195,14 +1195,14 @@ export class PDFPlusLib {
             return {
                 success: true,
                 shouldUpdate: false,
-                detail: `There is a newer version, but it was released less than ${minHoursSinceRelease} hours ago.`,
+                detail: t('libIndex.newer-version-released-less-than-hours-ago.detail', { minHours: minHoursSinceRelease }),
             };
         }
 
         return {
             success: true,
             shouldUpdate: true,
-            detail: `There is a newer version released ${hoursSinceNextRelease.toFixed(1)} hours ago.`,
+            detail: t('libIndex.newer-version-released-hours-ago.detail', { hours: hoursSinceNextRelease.toFixed(1) }),
         };
     }
 }

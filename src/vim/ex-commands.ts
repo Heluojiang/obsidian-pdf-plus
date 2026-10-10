@@ -4,6 +4,7 @@ import { VimBindings } from './vim';
 import { VimHintTarget } from './hint';
 import { UserScriptContext } from 'user-script/context';
 import { MarkdownModal } from 'modals/markdown-modal';
+import { t } from 'lang';
 
 
 export type ExCommand = { id: string, minNargs?: number, description?: string, pattern?: RegExp, func: (...args: string[]) => any };
@@ -15,12 +16,12 @@ export const exCommands = (vim: VimBindings): ExCommand[] => {
     return [
         { id: 'nextpage', func: () => vim.pdfViewer?.nextPage() },
         { id: 'prevpage', func: () => vim.pdfViewer?.previousPage() },
-        { id: '0', description: ':0 - Go to the first page (same as :1)', func: () => vim.pdfViewer && (vim.pdfViewer.currentPageNumber = 1) },
-        { id: '$', description: ':$ - Go to the last page.', func: () => vim.pdfViewer && (vim.pdfViewer.currentPageNumber = vim.pdfViewer.pagesCount) },
+        { id: '0', description: t('vimExCommands.go-to-the-first-page.help'), func: () => vim.pdfViewer && (vim.pdfViewer.currentPageNumber = 1) },
+        { id: '$', description: t('vimExCommands.go-to-the-last-page.help'), func: () => vim.pdfViewer && (vim.pdfViewer.currentPageNumber = vim.pdfViewer.pagesCount) },
         {
             id: 'gotopage',
             pattern: /^go(to(page)?)?$/,
-            description: ':go[to[page]] <page> - Go to the specified page. If the PDF has page labels, the argument is treated as a page label. Otherwise, it is treated as a page number.',
+            description: t('vimExCommands.go-to-page.help'),
             minNargs: 1,
             func: async (page) => {
                 if (vim.pdfViewer) {
@@ -43,7 +44,7 @@ export const exCommands = (vim: VimBindings): ExCommand[] => {
         { id: 'searchbackward', pattern: /^searchb(ackward)?$/, func: () => setTimeout(() => vim.search.start(false)) },
         { id: 'findnext', func: () => vim.search.findNext() },
         { id: 'findprev', func: () => vim.search.findPrevious() },
-        { id: 'zoom', description: ':zoom <number> - Set the zoom level to <number> percent.', minNargs: 1, func: (level) => vim.pdfViewer && (vim.pdfViewer.currentScale = 0.01 * +level) },
+        { id: 'zoom', description: t('vimExCommands.zoom.help'), minNargs: 1, func: (level) => vim.pdfViewer && (vim.pdfViewer.currentScale = 0.01 * +level) },
         { id: 'zoomin', func: () => vim.obsidianViewer?.zoomIn() },
         { id: 'zoomout', func: () => vim.obsidianViewer?.zoomOut() },
         { id: 'zoomreset', func: () => vim.obsidianViewer?.zoomReset() },
@@ -60,8 +61,8 @@ export const exCommands = (vim: VimBindings): ExCommand[] => {
                 }
             }
         },
-        { id: 'outline', pattern: /^(outline)|(toc)$/, description: ':outline or :toc - Show the outline view.', func: () => vim.lib.commands.showOutline(false) },
-        { id: 'thumbnail', pattern: /^thumb(nail)?$/, description: ':thumb[nail] - Show the thumbnails view.', func: () => vim.lib.commands.showThumbnail(false) },
+        { id: 'outline', pattern: /^(outline)|(toc)$/, description: t('vimExCommands.outline.help'), func: () => vim.lib.commands.showOutline(false) },
+        { id: 'thumbnail', pattern: /^thumb(nail)?$/, description: t('vimExCommands.thumbnail.help'), func: () => vim.lib.commands.showThumbnail(false) },
         { id: 'closesidebar', func: () => vim.lib.commands.closeSidebar(false) },
         {
             id: 'help', pattern: /^h(elp)?$/, func: (arg) => {
@@ -84,11 +85,11 @@ export const exCommands = (vim: VimBindings): ExCommand[] => {
         { id: 'vnoremap', pattern: /^vn(oremap)?$/, minNargs: 2, func: (from, ...to) => vim.noremap(['visual'], from, to.join(' ')), description: mapDesc('vn[oremap]', ['visual'], true) },
         { id: 'omap', pattern: /^om(ap)?$/, minNargs: 2, func: (from, ...to) => vim.map(['outline'], from, to.join(' ')), description: mapDesc('om[ap]', ['outline']) },
         { id: 'onoremap', pattern: /^ono(remap)?$/, minNargs: 2, func: (from, ...to) => vim.noremap(['outline'], from, to.join(' ')), description: mapDesc('ono[remap]', ['outline'], true) },
-        { id: 'unmap', pattern: /^unm(ap)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['normal', 'visual', 'outline'], [key]), description: ':unm[ap] <key> - Unmap <key> in all modes.' },
-        { id: 'nunmap', pattern: /^nun(map)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['normal'], [key]), description: ':nun[map] <key> - Unmap <key> in normal mode.' },
-        { id: 'vunmap', pattern: /^vu(nmap)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['visual'], [key]), description: ':vu[nmap] <key> - Unmap <key> in visual mode.' },
-        { id: 'ounmap', pattern: /^ou(nmap)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['outline'], [key]), description: ':ou[nmap] <key> - Unmap <key> in outline mode.' },
-        { id: 'js', pattern: /^js(command)?$/, minNargs: 1, func: (...code) => vim.evalUserScript(code.join(' ')), description: `:js[command] <code>: Execute the given javascript <code> in a context where "this" points to a "${UserScriptContext.name}" object.` },
+        { id: 'unmap', pattern: /^unm(ap)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['normal', 'visual', 'outline'], [key]), description: t('vimExCommands.unmap.help') },
+        { id: 'nunmap', pattern: /^nun(map)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['normal'], [key]), description: t('vimExCommands.nunmap.help') },
+        { id: 'vunmap', pattern: /^vu(nmap)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['visual'], [key]), description: t('vimExCommands.vunmap.help') },
+        { id: 'ounmap', pattern: /^ou(nmap)?$/, minNargs: 1, func: (key) => vim.vimScope.unmap(['outline'], [key]), description: t('vimExCommands.ounmap.help') },
+        { id: 'js', pattern: /^js(command)?$/, minNargs: 1, func: (...code) => vim.evalUserScript(code.join(' ')), description: t('vimExCommands.javascript.help', { v0: UserScriptContext.name }) },
         {
             id: 'jsfile',
             minNargs: 1,
@@ -97,27 +98,17 @@ export const exCommands = (vim: VimBindings): ExCommand[] => {
                 const jsCode = await vim.app.vault.adapter.read(vim.app.metadataCache.getFirstLinkpathDest(path, '')?.path ?? path);
                 return await vim.evalUserScript(jsCode);
             },
-            description: `:jsfile <path> - Execute the javascript code in the file at <path> (relative to the vault root; can be just the filename if it's unique). It can be any plain text file with arbitrary file extension. The code will be evaluated in a context where "this" points to a "${UserScriptContext.name}" object.`
+            description: t('vimExCommands.javascript-file.help', { v0: UserScriptContext.name })
         },
         {
             id: 'obcommand',
-            description: ':obcommand <command-id> - Execute the Obsidian command with the specified ID. Inspired by esm\'s awesome Vimrc Support plugin.',
+            description: t('vimExCommands.obcommand.help'),
             minNargs: 1,
             func: (cmd) => vim.app.commands.executeCommandById(cmd)
         },
         {
             id: 'hint',
-            description: `
-            :hint [<target1> <target2> ...] - Enter hint mode and show hint marks for the specified targets in the current page. Inspired by [Tridactyl](https://github.com/tridactyl/tridactyl)'s hint mode.
-            
-            If no target is specified, the default targets (configured in PDF++ settings) will be used.
-            The accepted targets are: 
-            
-            - \`all\`: all of the followings
-            - \`link\`: internal & external links
-            - \`annot\`: (non-link) annotations written in the file
-            - \`backlink\`: backlink highlighting, i.e., highlights that is not written in the file itself
-            `,
+            description: t('vimExCommands.hint.help'),
             func: (...targets) => {
                 if (targets.length === 0) targets = vim.settings.vimHintArgs.trim().split(/\s+/);
                 if (targets.includes('all')) targets = ['link', 'annot', 'backlink'];
@@ -144,4 +135,20 @@ const lint = (str: string, indentSize = 12, escapeAngleBrackets = true) => {
     return escapeAngleBrackets ? str.replace(/([<>])/g, '\\$1') : str;
 };
 
-const mapDesc = (signature: string, modes: string[], noremap = false) => `:${signature} <from> <to> - Map <from> to <to> ${noremap ? 'non-recusively ' : ''}in ${modes.length > 1 ? modes.slice(0, -1).join(', ') + ' and ' + modes.at(-1)! + ' modes' : modes[0] + ' mode'}. If <to> is an ex-command, it must be start with ":".`;
+const mapDesc = (signature: string, modes: string[], noremap = false) => {
+    // The list of modes is generated from `modes` and is kept untranslated: these are the
+    // mode names used by the `:map` family of Ex commands themselves.
+    if (modes.length > 1) {
+        const modeList = modes.slice(0, -1).join(', ') + ' and ' + modes.at(-1)!;
+        return t('vimExCommands.map-command.multiple-modes.help', {
+            signature,
+            v0: noremap ? t('vimExCommands.map-command.non-recursively') : '',
+            v1: modeList,
+        });
+    }
+    return t('vimExCommands.map-command.single-mode.help', {
+        signature,
+        v0: noremap ? t('vimExCommands.map-command.non-recursively') : '',
+        v1: modes[0],
+    });
+};

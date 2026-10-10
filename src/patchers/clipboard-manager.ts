@@ -3,6 +3,7 @@ import { around } from 'monkey-around';
 
 import PDFPlus from 'main';
 import { ClipboardManager, DropEffect } from 'typings';
+import { t } from 'lang';
 
 
 export const patchClipboardManager = (plugin: PDFPlus) => {
@@ -40,7 +41,7 @@ export const patchClipboardManager = (plugin: PDFPlus) => {
                 // if (draggable.type === 'annotation-link') 
                 {
                     setDragEffect(evt, 'link');
-                    app.dragManager.setAction('Insert link here');
+                    app.dragManager.setAction(t('clipboardManager.insert-link-here'));
                 }
             };
         },

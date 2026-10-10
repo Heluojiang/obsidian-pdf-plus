@@ -130,26 +130,25 @@ export class DataviewInlineFieldsModal extends PDFPlusModal {
 
         this.contentEl.createEl('p', {
             text: createFragment((el) => el.append(
-                'For the ',
+                t('libDataview.about-the-dataview-inline-fields.help'),
                 createEl('a', {
-                    text: '"Property to associate a markdown file to a PDF file"'
+                    text: t('libDataview.about-the-dataview-inline-fields.help-2')
                 }, (a) => {
                     a.onclick = () => {
                         this.plugin.openSettingTab().scrollTo('proxyMDProperty');
                     };
-                    setTooltip(a, 'Open in PDF++ settings', { placement: 'top' });
+                    setTooltip(a, t('libDataview.open-in-pdf-settings.tooltip'), { placement: 'top' });
                 }),
-                ' setting, ',
+                t('libDataview.about-the-dataview-inline-fields.help-3'),
                 createEl('a', { text: 'Dataview', href: 'obsidian://show-plugin?id=dataview' }),
-                `'s inline field syntax such as `,
+                t('libDataview.about-the-dataview-inline-fields.help-4'),
                 createEl('code', { text: `${propertyName}:: [[file.pdf]]` }),
-                ` is supported for the time being, but `,
+                t('libDataview.about-the-dataview-inline-fields.help-5'),
                 createSpan({
-                    text: 'it is deprecated and will likely not work in the future',
+                    text: t('libDataview.about-the-dataview-inline-fields.help-6'),
                 }, (span) => span.setCssStyles({
                     color: 'var(--text-warning)',
                 })),
-                '.',
             )),
         });
 
@@ -158,25 +157,27 @@ export class DataviewInlineFieldsModal extends PDFPlusModal {
         const files = this.filesWithInlineFields;
         if (files.length === 0) {
             this.contentEl.createEl('p', {
-                text: `No "${propertyName}" inline fields detected. You're good to go!`,
+                text: t('libDataview.no-inline-fields-detected', { propertyName: propertyName }),
             });
             return;
         }
 
         this.contentEl.createEl('p', {
             text: createFragment((el) => el.append(
-                (files.length >= 2 ? 'The following files seem to have ' : 'The following file seems to have '),
-                `"${propertyName}" inline fields.`,
+                files.length >= 2
+                    ? t('libDataview.files-with-inline-fields.help-multiple')
+                    : t('libDataview.files-with-inline-fields.help-single'),
+                t('libDataview.files-with-inline-fields.help-2', { propertyName: propertyName }),
                 createEl('br'),
-                'Please consider moving these inline fields to the ',
+                t('libDataview.files-with-inline-fields.help-3'),
                 createEl('a', {
-                    text: 'properties (YAML frontmatter)',
+                    text: t('libDataview.files-with-inline-fields.help-4'),
                     href: 'https://help.obsidian.md/properties',
                     cls: 'external-link',
                 }, (a) => {
                     setTooltip(a, 'https://help.obsidian.md/properties', { placement: 'top' });
                 }),
-                ' instead.',
+                t('libDataview.files-with-inline-fields.help-5'),
             )),
         });
 
@@ -209,7 +210,7 @@ export class DataviewInlineFieldsModal extends PDFPlusModal {
 
         if (files.length > 0) {
             this.contentEl.createEl('p', {
-                text: `To display this modal again, run the "${this.plugin.lib.commands.getCommand('open-dataview-inline-fields-modal').name}" command.`
+                text: t('libDataview.to-display-this-modal-again', { commandName: this.plugin.lib.commands.getCommand('open-dataview-inline-fields-modal').name })
             });
         } else {
             this.plugin.requiresDataviewInlineFieldsMigration = false;
@@ -221,7 +222,7 @@ export class DataviewInlineFieldsModal extends PDFPlusModal {
         this.contentEl.createDiv('modal-button-container', (el) => {
             if (files.length > 0) {
                 new ButtonComponent(el)
-                    .setButtonText(files.length >= 2 ? 'Copy links as markdown' : 'Copy link as markdown')
+                    .setButtonText(files.length >= 2 ? t('libDataview.copy-links-as-markdown') : t('libDataview.copy-link-as-markdown'))
                     .setCta()
                     .onClick(async () => {
                         const text =
