@@ -779,7 +779,9 @@ export default class PDFPlus extends Plugin {
 						'PDF++: There is a newer version available! ',
 						createEl('a', {
 							text: 'Update now',
-							href: 'obsidian://show-plugin?id=pdf-plus',
+							// Not obsidian://show-plugin?id=pdf-plus: that opens the community plugin page
+							// of the upstream repository, which would replace this fork's build with it.
+							href: 'https://github.com/Heluojiang/obsidian-pdf-plus/releases/latest',
 						})
 					);
 				}));

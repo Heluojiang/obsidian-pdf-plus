@@ -399,13 +399,14 @@ Fortunately, it seems to be compatible with PDF++, meaning you can use features 
 
 ## Installation
 
-You can install this plugin from within Obsidian's community plugin browser.
+> [!important]
+> This is a fork of [RyotaUshio/obsidian-pdf-plus](https://github.com/RyotaUshio/obsidian-pdf-plus) and is **not** published to Obsidian's community plugin browser. Installing "PDF++" from within Obsidian would give you the upstream plugin, not this build. Use BRAT as described below.
 
-Alternatively, you can try the cutting-edge, latest beta release using [BRAT](https://github.com/TfTHacker/obsidian42-brat).
+Alternatively, install the latest version of this fork using [BRAT](https://github.com/TfTHacker/obsidian42-brat).
 
 1. Install the latest version of BRAT and enable it.
 2. _(Optional but highly recommended)_ In the BRAT settings, turn on `Auto-update plugins at startup` at the top of the page.
-3. Open the following URL in the browser: `obsidian://brat?plugin=RyotaUshio/obsidian-pdf-plus`.
+3. Open the following URL in the browser: `obsidian://brat?plugin=Heluojiang/obsidian-pdf-plus`.
 4. Click the "Add Plugin" button.
 
 ## Credits
