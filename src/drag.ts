@@ -24,7 +24,7 @@ export const registerOutlineDrag = async (plugin: PDFPlus, pdfOutlineViewer: PDF
             const itemTitle = lib.toSingleLine(item.item.title);
             const title = itemTitle
                 ? `${itemTitle.length <= 40 ? itemTitle : itemTitle.slice(0, 39).trim() + '…'}`
-                : 'PDF section';
+                : t('drag.pdf-section');
 
             app.dragManager.handleDrag(item.selfEl, (evt) => {
                 app.dragManager.updateSource([item.selfEl], 'is-being-dragged');
@@ -71,7 +71,7 @@ export const registerOutlineDrag = async (plugin: PDFPlus, pdfOutlineViewer: PDF
                     }
 
                     return {
-                        action: `Move into "${title}"`,
+                        action: t('drag.move-into.action', { title }),
                         dropEffect: 'move',
                         hoverEl: item.el,
                         hoverClass: 'is-being-dragged-over',
@@ -113,7 +113,7 @@ export const registerOutlineDrag = async (plugin: PDFPlus, pdfOutlineViewer: PDF
             }
 
             return {
-                action: `Move to top level`,
+                action: t('drag.move-to-top-level.action'),
                 dropEffect: 'move',
                 hoverEl: pdfOutlineViewer.childrenEl,
                 hoverClass: 'is-being-dragged-over',
@@ -133,8 +133,8 @@ export const registerThumbnailDrag = (plugin: PDFPlus, child: PDFViewerChild, fi
             const pageLabel = pageView.pageLabel ?? ('' + pageNumber);
             const pageCount = child.pdfViewer.pagesCount;
             const title = ('' + pageNumber === pageLabel)
-                ? `Page ${pageNumber}`
-                : `Page ${pageLabel} (${pageNumber}/${pageCount})`;
+                ? t('drag.page.title', { pageNumber })
+                : t('drag.page-label.title', { pageLabel, pageNumber, pageCount });
 
             app.dragManager.handleDrag(div, (evt) => {
                 app.dragManager.updateSource([div], 'is-being-dragged');
@@ -174,7 +174,7 @@ export const registerAnnotationPopupDrag = (plugin: PDFPlus, popupEl: HTMLElemen
                     source: 'pdf-plus',
                     type: 'pdf-annotation',
                     icon: 'lucide-highlighter',
-                    title: 'PDF annotation',
+                    title: t('drag.pdf-annotation'),
                     getText: (sourcePath: string) => {
                         return lib.copyLink.getTextToCopy(child, template, undefined, file, page, `#page=${page}&annotation=${id}`, text ?? '', '', sourcePath);
                     }

@@ -834,7 +834,7 @@ export class PDFPlusCommands extends PDFPlusLibSubmodule {
         if (!destArray) return false;
 
         if (!checking) {
-            new PDFOutlineTitleModal(this.plugin, 'Add to outline')
+            new PDFOutlineTitleModal(this.plugin, t('libCommands.add-to-outline.title'))
                 .ask()
                 .then(async ({ title }) => {
                     const outlines = await PDFOutlines.fromFile(file, this.plugin);

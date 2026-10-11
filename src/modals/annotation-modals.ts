@@ -286,7 +286,7 @@ export class PDFAnnotationEditModal extends PDFAnnotationModal {
                     } else {
                         setting.setDesc(createFragment((el) => {
                             const anchorEl = createEl('a', {
-                                text: '"Render markdown in annotation popups when the annotation has text contents"',
+                                text: t('modalsAnnotationModals.render-markdown-in-annotation-popups.link'),
                              }, (el) => {
                                 el.onclick = (evt) => {
                                     const tab = this.plugin.openSettingTab();
@@ -295,7 +295,7 @@ export class PDFAnnotationEditModal extends PDFAnnotationModal {
                                 };
                              });
                                 
-                            el.append('Tip: There is an option called ');
+                            el.append(t('modalsAnnotationModals.tip-there-is-an-option-called.help'));
                             el.append(anchorEl);
                             el.append('.');
                         }));
@@ -338,7 +338,7 @@ export class PDFAnnotationEditModal extends PDFAnnotationModal {
             .setClass('no-border');
         this.buttonContainerEl.createDiv({
             cls: 'pdf-plus-annotation-edit-modal-save-instructions',
-            text: `Press ${getModifierNameInPlatform('Mod')} + Enter to save.`
+            text: t('modalsAnnotationModals.press-modifier-enter-to-save.help', { v0: getModifierNameInPlatform('Mod') })
         });
     }
 
@@ -349,7 +349,7 @@ export class PDFAnnotationEditModal extends PDFAnnotationModal {
 
     async onOpen() {
         super.onOpen();
-        this.titleEl.setText(`${this.plugin.manifest.name}: edit annotation contents`);
+        this.titleEl.setText(t('modalsAnnotationModals.edit-annotation-contents.title', { plugin: this.plugin.manifest.name }));
         await this.readOldValues();
 
         for (const key of this.supportedKeys) {
@@ -407,10 +407,10 @@ export class PDFAnnotationDeleteModal extends PDFAnnotationModal {
     onOpen() {
         super.onOpen();
 
-        this.titleEl.setText(`${this.plugin.manifest.name}: delete annotation`);
-        this.contentEl.createEl('p', { text: 'Are you sure you want to delete this annotation?' });
+        this.titleEl.setText(t('modalsAnnotationModals.delete-annotation.title', { plugin: this.plugin.manifest.name }));
+        this.contentEl.createEl('p', { text: t('modalsAnnotationModals.are-you-sure-you-want-to-delete-this-annotation') });
         if (!this.plugin.settings.warnEveryAnnotationDelete) {
-            this.contentEl.createEl('p', { cls: 'mod-warning', text: 'There are one or more links pointing to this annotation.' });
+            this.contentEl.createEl('p', { cls: 'mod-warning', text: t('modalsAnnotationModals.links-pointing-to-this-annotation') });
         }
 
         new Setting(this.contentEl)

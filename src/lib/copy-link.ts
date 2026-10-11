@@ -281,7 +281,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
                     this.onCopyFinish(evaluated);
 
                     const palette = this.lib.getColorPaletteFromChild(child);
-                    palette?.setStatus('Link copied', this.statusDurationMs);
+                    palette?.setStatus(t('libCopyLink.link-copied.status'), this.statusDurationMs);
                     this.autoFocusOrAutoPaste(evaluated, autoPaste, palette ?? undefined);
 
                     // TODO: Needs refactor
@@ -333,7 +333,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
 
                     const palette = this.lib.getColorPaletteFromChild(child);
                     // This can be redundant because the copy button already shows the status.
-                    if (shouldShowStatus) palette?.setStatus('Link copied', this.statusDurationMs);
+                    if (shouldShowStatus) palette?.setStatus(t('libCopyLink.link-copied.status'), this.statusDurationMs);
                     this.autoFocusOrAutoPaste(evaluated, autoPaste, palette ?? undefined);
 
                     // TODO: Needs refactor
@@ -357,7 +357,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
                 this.onCopyFinish(evaluated);
 
                 const palette = this.lib.getColorPaletteFromChild(child);
-                palette?.setStatus('Link copied', this.statusDurationMs);
+                palette?.setStatus(t('libCopyLink.link-copied.status'), this.statusDurationMs);
                 this.autoFocusOrAutoPaste(evaluated, autoPaste, palette ?? undefined);
             })();
         }
@@ -377,7 +377,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
 
         if (!checking) {
             const palette = this.lib.getColorPaletteAssociatedWithSelection();
-            palette?.setStatus('Writing highlight annotation into file...', 10000);
+            palette?.setStatus(t('libCopyLink.writing-highlight-annotation-into-file.status'), 10000);
             this.lib.highlight.writeFile.addTextMarkupAnnotationToSelection(
                 this.settings.selectionBacklinkVisualizeStyle === 'highlight' ? 'Highlight' : 'Underline',
                 colorName
@@ -392,7 +392,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
                         // After the file modification, the PDF viewer DOM is reloaded, so we need to 
                         // get the new DOM to access the newly loaded color palette instance.
                         const newPalette = this.lib.getColorPaletteFromChild(child);
-                        newPalette?.setStatus('Link copied', this.statusDurationMs);
+                        newPalette?.setStatus(t('libCopyLink.link-copied.status'), this.statusDurationMs);
                         const { r, g, b } = this.plugin.domManager.getRgb(colorName);
                         this.copyLinkToAnnotationWithGivenTextAndFile(text, file, child, false, templates, page, annotationID, `${r}, ${g}, ${b}`, autoPaste);
 
@@ -420,7 +420,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
         const palette = this.lib.getColorPaletteFromChild(child);
 
         if (rect.some((coord) => isNaN(coord))) {
-            palette?.setStatus('Invalid selection', this.statusDurationMs);
+            palette?.setStatus(t('libCopyLink.invalid-selection.status'), this.statusDurationMs);
             return false;
         }
 
@@ -481,7 +481,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
 
                 this.plugin.lastCopiedDestInfo = { file, destArray: [pageNumber - 1, 'FitR', ...rect] };
 
-                palette?.setStatus('Link copied', this.statusDurationMs);
+                palette?.setStatus(t('libCopyLink.link-copied.status'), this.statusDurationMs);
                 await this.autoFocusOrAutoPaste(text, autoPaste, palette ?? undefined);
             })();
         }
@@ -502,7 +502,7 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
             (async () => {
                 await navigator.clipboard.writeText(link);
                 this.onCopyFinish(link);
-                palette?.setStatus('Link copied', this.statusDurationMs);
+                palette?.setStatus(t('libCopyLink.link-copied.status'), this.statusDurationMs);
                 await this.autoFocusOrAutoPaste(link, autoPaste, palette ?? undefined);
             })();
         }
@@ -878,18 +878,18 @@ export class copyLinkLib extends PDFPlusLibSubmodule {
         if (autoPaste || this.settings.autoPaste) {
             const success = await this.autoPaste(evaluated);
             if (success) {
-                palette?.setStatus('Link copied & pasted', this.statusDurationMs);
+                palette?.setStatus(t('libCopyLink.link-copied-and-pasted.status'), this.statusDurationMs);
                 if (!this.settings.focusEditorAfterAutoPaste && this.settings.clearSelectionAfterAutoPaste) {
                     const selection = activeWindow.getSelection();
                     if (selection && this.lib.copyLink.getPageAndTextRangeFromSelection(selection)) {
                         selection.empty();
                     }
                 }
-            } else palette?.setStatus('Link copied but paste target not identified', this.statusDurationMs);
+            } else palette?.setStatus(t('libCopyLink.link-copied-but-paste-target-not-identified.status'), this.statusDurationMs);
         } else {
             if (this.settings.autoFocus) {
                 const success = await this.autoFocus();
-                if (!success) palette?.setStatus('Link copied but paste target not identified', this.statusDurationMs);
+                if (!success) palette?.setStatus(t('libCopyLink.link-copied-but-paste-target-not-identified.status'), this.statusDurationMs);
             }
         }
     }

@@ -16,7 +16,7 @@ export class AutoCopyMode extends PDFPlusComponent {
             this.iconEl = plugin.settings.autoCopyToggleRibbonIcon
                 ? plugin.addRibbonIcon(
                     this.settings.autoCopyIconName,
-                    `${plugin.manifest.name}: Toggle auto-copy`,
+                    t('auto-copy.toggle-auto-copy.tooltip', { plugin: plugin.manifest.name }),
                     () => {
                         if (!menuShown) this.toggle();
                     }

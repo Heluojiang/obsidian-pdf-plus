@@ -18,6 +18,23 @@ const SELECTION_BACKLINK_VISUALIZE_STYLE = {
 } as const;
 export type SelectionBacklinkVisualizeStyle = keyof typeof SELECTION_BACKLINK_VISUALIZE_STYLE;
 
+/**
+ * The translated label for a selection backlink style.
+ *
+ * `settings.selectionBacklinkVisualizeStyle` raw values ("highlight" / "underline") are
+ * persisted in data.json and must never be shown to users, but several tooltips and menu
+ * titles interpolate them into a sentence. Callers use this instead, so the tuple becomes
+ * "Add highlights to file" and "向文件添加高亮" rather than a Chinese sentence with an
+ * English enum word in it.
+ *
+ * Lives here rather than next to either caller because `color-palette.ts` and
+ * `context-menu.ts` sit in different layers of the import graph (color-palette does not
+ * import context-menu, and lib/copy-link imports color-palette).
+ */
+export function selectionBacklinkVisualizeStyleLabel(style: SelectionBacklinkVisualizeStyle): string {
+	return SELECTION_BACKLINK_VISUALIZE_STYLE[style];
+}
+
 const HOVER_HIGHLIGHT_ACTIONS = {
 	'open': t('settings.hoverHighlightAction.option.open'),
 	'preview': t('settings.hoverHighlightAction.option.preview'),
@@ -1351,16 +1368,16 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			index,
 			'defaultDisplayTextFormatIndex', {
 			name: {
-				placeholder: 'Format name',
+				placeholder: t('settings.namedTemplate.name.placeholder'),
 				formSize: 30,
-				duplicateMessage: 'This format name is already used.',
+				duplicateMessage: t('settings.namedTemplate.name.duplicate'),
 			},
 			value: {
-				placeholder: 'Display text format',
+				placeholder: t('settings.namedTemplate.display-text.value.placeholder'),
 				formSize: 50,
 			},
 			delete: {
-				deleteLastMessage: 'You cannot delete the last display text format.',
+				deleteLastMessage: t('settings.namedTemplate.delete-last-display-text-format'),
 			}
 		});
 	}
@@ -1371,17 +1388,17 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			index,
 			'defaultColorPaletteActionIndex', {
 			name: {
-				placeholder: 'Format name',
+				placeholder: t('settings.namedTemplate.name.placeholder'),
 				formSize: 30,
-				duplicateMessage: 'This format name is already used.',
+				duplicateMessage: t('settings.namedTemplate.name.duplicate'),
 			},
 			value: {
-				placeholder: 'Copied text format',
+				placeholder: t('settings.namedTemplate.copy.value.placeholder'),
 				formSize: 50,
 				formRows: 3,
 			},
 			delete: {
-				deleteLastMessage: 'You cannot delete the last copy format.',
+				deleteLastMessage: t('settings.namedTemplate.delete-last-copy-format'),
 			}
 		});
 	}
@@ -1410,7 +1427,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 		const required = this.plugin.requireModKeyForLinkHover(id);
 		return this.addSetting()
 			.setName(t('settings.misc.require-key-while-hovering', { modKey: modKey }))
-			.setDesc(t('settings.misc.currently-you-can-toggle-this-on-and-off-in', { v0: required ? 'required' : 'not required', display: display }))
+			.setDesc(t('settings.misc.currently-you-can-toggle-this-on-and-off-in', { v0: required ? t('settings.misc.required') : t('settings.misc.not-required'), display: display }))
 			.then((setting) => this.addPagePreviewSettingButton(setting));
 	}
 
@@ -1437,7 +1454,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			const text = setting.components[0] as TextComponent;
 			if ((!leaveBlankToRemoveIcon || this.plugin.settings[settingName]) && !iconPreviewEl.childElementCount) {
 				text.inputEl.addClass('error');
-				setTooltip(text.inputEl, 'No icon found');
+				setTooltip(text.inputEl, t('settings.iconPicker.no-icon-found.tooltip'));
 			} else {
 				text.inputEl.removeClass('error');
 				setTooltip(text.inputEl, '');
@@ -1451,7 +1468,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			renderAndValidateIcon(setting);
 		})
 			.then((setting) => {
-				this.renderMarkdown(t('settings.misc.help.you-can-use-any-icon-from-lucide-https-l', { v0: (leaveBlankToRemoveIcon ? ' Leave blank to remove icons.' : '') }), setting.descEl);
+				this.renderMarkdown(t('settings.misc.help.you-can-use-any-icon-from-lucide-https-l', { v0: (leaveBlankToRemoveIcon ? t('settings.iconPicker.leave-blank-to-remove-icons') : '') }), setting.descEl);
 			})
 			.then(renderAndValidateIcon);
 	}
@@ -1498,14 +1515,14 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			this.addSetting()
 				.then((setting) => {
 					if (Platform.isDesktopApp) {
-						setting.setName(i === 0 ? 'Top-level menu' : i === 1 ? 'Submenu' : 'Subsubmenu');
+						setting.setName(i === 0 ? t('settings.menuCategory.top-level') : i === 1 ? t('settings.menuCategory.submenu') : t('settings.menuCategory.subsubmenu'));
 					}
 				})
 				.addDropdown((dropdown) => {
 					for (const category of remainingCategories) {
 						dropdown.addOption(category, displayNames[category]);
 					}
-					if (i > 0) dropdown.addOption('', 'None');
+					if (i > 0) dropdown.addOption('', t('settings.menuCategory.none'));
 
 					let currentValue: string = values[i] ?? '';
 					if (currentValue && !remainingCategories.includes(currentValue)) {
@@ -1609,7 +1626,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			await this.renderMarkdown(t('settings.misc.help.tip-you-can-easily-navigate-through-the'), el);
 			const linkEl = document.getElementById('pdf-plus-funding-link-placeholder');
 			if (linkEl) {
-				linkEl.textContent = 'Help me keep PDF++ alive!';
+				linkEl.textContent = t('settings.funding.help-keep-pdf-plus-alive');
 				linkEl.onclick = (evt) => {
 					this.scrollToHeading('funding', { behavior: 'smooth' });
 					this.updateHeaderElClassOnScroll(evt);
@@ -1628,7 +1645,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 				this.renderMarkdown(t('settings.enablePDFEdit.help'), setting.descEl);
 			});
 		if (this.plugin.settings.enablePDFEdit) {
-			this.addTextSetting('author', 'Your name', (setting) => {
+			this.addTextSetting('author', t('settings.author.placeholder'), (setting) => {
 				const inputEl = (setting.components[0] as TextComponent).inputEl;
 				inputEl.toggleClass('error', !inputEl.value);
 			})
@@ -1676,7 +1693,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 		if (this.plugin.settings.paneTypeForFirstMDLeaf === 'left-sidebar' || this.plugin.settings.paneTypeForFirstMDLeaf === 'right-sidebar') {
 			this.addToggleSetting('alwaysUseSidebar')
 				.setName(t('settings.alwaysUseSidebar.name'))
-				.setDesc(t('settings.alwaysUseSidebar.desc', { v0: this.plugin.settings.paneTypeForFirstMDLeaf === 'left-sidebar' ? 'left' : 'right' }));
+				.setDesc(t('settings.alwaysUseSidebar.desc', { v0: this.plugin.settings.paneTypeForFirstMDLeaf === 'left-sidebar' ? t('settings.alwaysUseSidebar.side.left') : t('settings.alwaysUseSidebar.side.right') }));
 			this.addToggleSetting('singleMDLeafInSidebar')
 				.setName(t('settings.singleMDLeafInSidebar.name'))
 				.setDesc(t('settings.singleMDLeafInSidebar.desc'));
@@ -1685,9 +1702,9 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			.setName(t('settings.ignoreExistingMarkdownTabIn.name'))
 			.setDesc(t('settings.ignoreExistingMarkdownTabIn.desc'));
 		const splits = {
-			'leftSplit': 'Left sidebar',
-			'rightSplit': 'Right sidebar',
-			'floatingSplit': 'Popout windows',
+			'leftSplit': t('paneType.leftSidebar'),
+			'rightSplit': t('paneType.rightSidebar'),
+			'floatingSplit': t('settings.paneTypeForFirstMDLeaf.floating-split'),
 		};
 		const ignoredSplits = this.plugin.settings.ignoreExistingMarkdownTabIn;
 		for (const [_split, displayName] of Object.entries(splits)) {
@@ -1737,7 +1754,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			this.addDropdownSetting(
 				'defaultColor',
 				['', ...Object.keys(this.plugin.settings.colors)],
-				(option) => option || 'Obsidian default',
+				(option) => option || t('settings.defaultColor.obsidian-default'),
 				() => this.plugin.loadStyle()
 			)
 				.setName(t('settings.defaultColor.name'))
@@ -1772,7 +1789,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			.setName(t('settings.rectEmbedStaticImage.name'))
 			.setDesc(t('settings.rectEmbedStaticImage.desc'));
 		if (this.plugin.settings.rectEmbedStaticImage) {
-			this.addDropdownSetting('rectImageFormat', { 'file': 'Create & embed image file', 'data-url': 'Embed as data URL' }, () => this.redisplay())
+			this.addDropdownSetting('rectImageFormat', { 'file': t('settings.rectImageFormat.file'), 'data-url': t('settings.rectImageFormat.data-url') }, () => this.redisplay())
 				.setName(t('settings.rectImageFormat.name'))
 				.then((setting) => this.renderMarkdown(t('settings.rectImageFormat.help'), setting.descEl));
 			if (this.plugin.settings.rectImageFormat === 'file') {
@@ -1843,7 +1860,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 				.setName(t('settings.noColorButtonInColorPalette.name'));
 			this.addToggleSetting('colorPaletteInEmbedToolbar', () => this.plugin.loadStyle())
 				.setName(t('settings.colorPaletteInEmbedToolbar.name'));
-			this.addIndexDropdownSetting('defaultColorPaletteItemIndex', ['', ...Object.keys(this.plugin.settings.colors)], (option) => option || 'Don\'t specify')
+			this.addIndexDropdownSetting('defaultColorPaletteItemIndex', ['', ...Object.keys(this.plugin.settings.colors)], (option) => option || t('settings.defaultColorPaletteItemIndex.dont-specify'))
 				.setName(t('settings.defaultColorPaletteItemIndex.name'))
 				.setDesc(t('settings.defaultColorPaletteItemIndex.desc'));
 			this.addToggleSetting('syncColorPaletteItem', () => this.redisplay())
@@ -1855,7 +1872,7 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			}
 			this.addToggleSetting('quietColorPaletteTooltip')
 				.setName(t('settings.quietColorPaletteTooltip.name'))
-				.setDesc(t('settings.quietColorPaletteTooltip.desc', { v0: !DEFAULT_SETTINGS.quietColorPaletteTooltip ? ' (default)' : '' }));
+				.setDesc(t('settings.quietColorPaletteTooltip.desc', { v0: !DEFAULT_SETTINGS.quietColorPaletteTooltip ? t('settings.quietColorPaletteTooltip.default-suffix') : '' }));
 		}
 
 
@@ -1894,17 +1911,17 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 			() => !this.plugin.settings.defaultZoomValue.startsWith('page-')
 		);
 		this.addEnumDropdownSetting('scrollModeOnLoad', {
-			[ScrollMode.VERTICAL]: 'Vertical',
-			[ScrollMode.HORIZONTAL]: 'Horizontal',
-			[ScrollMode.PAGE]: 'In-page',
-			[ScrollMode.WRAPPED]: 'Wrapped',
+			[ScrollMode.VERTICAL]: t('settings.scrollModeOnLoad.vertical'),
+			[ScrollMode.HORIZONTAL]: t('settings.scrollModeOnLoad.horizontal'),
+			[ScrollMode.PAGE]: t('settings.scrollModeOnLoad.in-page'),
+			[ScrollMode.WRAPPED]: t('settings.scrollModeOnLoad.wrapped'),
 		}, () => toggleSpreadModeOnLoadSettingVisibility())
 			.setName(t('settings.scrollModeOnLoad.name'));
 		const toggleSpreadModeOnLoadSettingVisibility = this.getVisibilityToggler(
 			this.addEnumDropdownSetting('spreadModeOnLoad', {
-				[SpreadMode.NONE]: 'Single page',
-				[SpreadMode.ODD]: 'Two page (odd)',
-				[SpreadMode.EVEN]: 'Two page (even)',
+				[SpreadMode.NONE]: t('settings.spreadModeOnLoad.single-page'),
+				[SpreadMode.ODD]: t('settings.spreadModeOnLoad.two-page-odd'),
+				[SpreadMode.EVEN]: t('settings.spreadModeOnLoad.two-page-even'),
 			})
 				.setName(t('settings.spreadModeOnLoad.name')),
 			() => this.plugin.settings.scrollModeOnLoad !== ScrollMode.WRAPPED
@@ -1928,15 +1945,15 @@ export class PDFPlusSettingTab extends PluginSettingTab {
 		} else {
 			this.addToggleSetting('showContextMenuOnTablet')
 				.setName(t('settings.showContextMenuOnTablet.name'))
-				.setDesc(t('settings.showContextMenuOnTablet.desc') + this.plugin.lib.commands.stripCommandNamePrefix(this.plugin.lib.commands.getCommand('copy-link-to-selection').name) + '" command.');
+				.setDesc(t('settings.showContextMenuOnTablet.desc') + this.plugin.lib.commands.stripCommandNamePrefix(this.plugin.lib.commands.getCommand('copy-link-to-selection').name) + t('settings.showContextMenuOnTablet.help-2'));
 
 			const modDict = getModifierDictInPlatform();
 			this.addDropdownSetting('showContextMenuOnMouseUpIf', {
-				'always': 'Always',
+				'always': t('settings.showContextMenuOnMouseUpIf.always'),
 				...Object.fromEntries(Object.entries(modDict).map(([modifier, name]) => {
-					return [modifier, `${name} key is pressed`];
+					return [modifier, t('settings.showContextMenuOnMouseUpIf.modifier-key-is-pressed', { modifierName: name })];
 				})),
-				'never': 'Never',
+				'never': t('settings.showContextMenuOnMouseUpIf.never'),
 			})
 				.setName(t('settings.showContextMenuOnMouseUpIf.name'))
 				.setDesc(createFragment((el) => {

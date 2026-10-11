@@ -5,6 +5,7 @@ import { MutationObservingChild, getSubpathWithoutHash, isMouseEventExternal, is
 import { BacklinkRenderer, PDFViewerComponent } from 'typings';
 import { PDFBacklinkCache } from 'lib/pdf-backlink-index';
 import { PDFPlusComponent } from 'lib/component';
+import { t } from 'lang';
 
 
 /** A component that will be loaded as a child of the backlinks pane while the active file is PDF. */
@@ -27,7 +28,7 @@ export class BacklinkPanePDFManager extends PDFPlusComponent {
     onload() {
         this.navButtonEl = this.renderer.headerDom.addNavButton(
             'lucide-filter',
-            'Show only backlinks in the current page',
+            t('pdf-backlink.show-only-backlinks-in-the-current-page.tooltip'),
             () => {
                 this.isTrackingPage = !this.isTrackingPage;
                 this.updatePageTracker();
@@ -196,7 +197,7 @@ export class BacklinkPanePDFPageTracker extends PDFPlusComponent {
             this.renderer.backlinkDom.el,
             // Remove filtered-out backlink file DOMs
             () => {
-                this.updateBacklinkCountEl((num) => `${num} in this page`);
+                this.updateBacklinkCountEl((num) => t('pdf-backlink.in-this-page.suffix', { num }));
                 if (!this.renderer.collapseAll) {
                     // The following rules work only if `this.renderer.collapseAll` is `false`.
                     // Otherwise, it causes all the backlink file DOMs to be removed.

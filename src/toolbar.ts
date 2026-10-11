@@ -89,7 +89,7 @@ export class PDFPlusToolbar extends PDFPlusComponent {
 
         toolbar.zoomInEl.after(createDiv('clickable-icon', (dropdownEl) => {
             setIcon(dropdownEl, 'lucide-chevron-down');
-            setTooltip(dropdownEl, 'Display options');
+            setTooltip(dropdownEl, t('toolbar.display-options.tooltip'));
 
             let shown = false;
             dropdownEl.addEventListener('click', () => {

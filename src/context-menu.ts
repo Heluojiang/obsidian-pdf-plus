@@ -7,7 +7,7 @@ import { PDFOutlineTreeNode, PDFViewerChild } from 'typings';
 import { PDFViewerBacklinkVisualizer } from 'backlink-visualizer';
 import { PDFBacklinkCache } from 'lib/pdf-backlink-index';
 import { addProductMenuItems, getSelectedItemsRecursive, fixOpenSubmenu, registerVimKeybindsToMenu } from 'utils/menu';
-import { DEFAULT_SETTINGS, NamedTemplate } from 'settings';
+import { DEFAULT_SETTINGS, NamedTemplate, selectionBacklinkVisualizeStyleLabel } from 'settings';
 import { ColorPalette } from 'color-palette';
 import { PDFPlusComponent } from 'lib/component';
 import { t } from 'lang';
@@ -85,8 +85,8 @@ export const onThumbnailContextMenu = (plugin: PDFPlus, child: PDFViewerChild, e
         const pageLabel = pageView.pageLabel ?? ('' + pageNumber);
         const pageCount = child.pdfViewer.pagesCount;
         const title = ('' + pageNumber === pageLabel)
-            ? `Copy link to page ${pageNumber}`
-            : `Copy link to page ${pageLabel} (${pageNumber}/${pageCount})`;
+            ? t('context-menu.copy-link-to-page.title', { pageNumber: pageNumber })
+            : t('context-menu.copy-link-to-page-label.title', { pageLabel: pageLabel, pageNumber: pageNumber, pageCount: pageCount });
         const menu = new Menu()
             .addItem((item) => {
                 item.setTitle(title)
@@ -182,8 +182,8 @@ export const onOutlineItemContextMenu = (plugin: PDFPlus, child: PDFViewerChild,
 
     const itemTitle = lib.toSingleLine(item.item.title);
     const title = itemTitle
-        ? `Copy link to "${itemTitle.length <= 40 ? itemTitle : itemTitle.slice(0, 39).trim() + '…'}"`
-        : 'Copy link to section';
+        ? t('context-menu.copy-link-to', { itemTitle: itemTitle.length <= 40 ? itemTitle : itemTitle.slice(0, 39).trim() + '…' })
+        : t('context-menu.copy-link-to-section');
 
     const menu = new Menu()
         .addItem((menuItem) => {
@@ -211,7 +211,7 @@ export const onOutlineItemContextMenu = (plugin: PDFPlus, child: PDFViewerChild,
                 .setTitle(t('context-menu.add-subitem'))
                 .setIcon('lucide-plus')
                 .onClick(() => {
-                    new PDFOutlineTitleModal(plugin, 'Add subitem to outline')
+                    new PDFOutlineTitleModal(plugin, t('context-menu.add-subitem-to-outline.title'))
                         .ask()
                         .then(async ({ title }) => {
                             const view = lib.getPDFViewFromChild(child);
@@ -238,7 +238,7 @@ export const onOutlineItemContextMenu = (plugin: PDFPlus, child: PDFViewerChild,
                     .setTitle(t('context-menu.rename'))
                     .setIcon('lucide-pencil')
                     .onClick(() => {
-                        new PDFOutlineTitleModal(plugin, 'Rename outline item')
+                        new PDFOutlineTitleModal(plugin, t('context-menu.rename-outline-item.title'))
                             .presetTitle(item.item.title)
                             .ask()
                             .then(async ({ title }) => {
@@ -389,7 +389,7 @@ export const onOutlineContextMenu = (plugin: PDFPlus, child: PDFViewerChild, fil
                     .setTitle(t('context-menu.add-top-level-item'))
                     .setIcon('lucide-plus')
                     .onClick(() => {
-                        new PDFOutlineTitleModal(plugin, 'Add item to outline')
+                        new PDFOutlineTitleModal(plugin, t('context-menu.add-item-to-outline.title'))
                             .ask()
                             .then(async ({ title }) => {
                                 const view = lib.getPDFViewFromChild(child);
@@ -512,7 +512,7 @@ export class PDFPlusContextMenu extends PDFPlusMenu {
                 if (isVisible('selection')) {
                     PDFPlusProductMenuComponent
                         .create(this, child.palette)
-                        .setSection('selection', 'Copy link to selection', 'lucide-copy')
+                        .setSection('selection', t('context-menu.copy-link-to-selection'), 'lucide-copy')
                         .addItems(plugin.settings.selectionProductMenuConfig)
                         .onItemClick(({ copyFormat, displayTextFormat, colorName }) => {
                             lib.copyLink.copyLinkToSelection(false, { copyFormat, displayTextFormat }, colorName ?? undefined);
@@ -537,7 +537,7 @@ export class PDFPlusContextMenu extends PDFPlusMenu {
                 if (lib.isEditable(child) && isVisible('write-file')) {
                     PDFPlusProductMenuComponent
                         .create(this, child.palette)
-                        .setSection('write-file', `Add ${plugin.settings.selectionBacklinkVisualizeStyle} to file`, 'lucide-edit')
+                        .setSection('write-file', t('context-menu.add-to-file.title', { visualizeStyle: selectionBacklinkVisualizeStyleLabel(plugin.settings.selectionBacklinkVisualizeStyle) }), 'lucide-edit')
                         .setShowNoColorButton(false)
                         .addItems(plugin.settings.writeFileProductMenuConfig)
                         .onItemClick(({ copyFormat, displayTextFormat, colorName }) => {
@@ -562,7 +562,7 @@ export class PDFPlusContextMenu extends PDFPlusMenu {
                 if (child.palette && isVisible('annotation')) {
                     PDFPlusProductMenuComponent
                         .create(this, child.palette)
-                        .setSection('annotation', 'Copy link to annotation', 'lucide-copy')
+                        .setSection('annotation', t('context-menu.copy-link-to-annotation'), 'lucide-copy')
                         .addItems(plugin.settings.annotationProductMenuConfig)
                         .onItemClick(({ copyFormat, displayTextFormat }) => {
                             lib.copyLink.copyLinkToAnnotation(child, false, { copyFormat, displayTextFormat }, pageNumber, id, false, true);
@@ -886,7 +886,7 @@ export class PDFPlusProductMenuComponent extends PDFPlusComponent {
 
         for (let i = this.showNoColorButton ? -1 : 0; i < colorNames.length; i++) {
             menu.addItem((item) => {
-                item.setTitle(i >= 0 ? colorNames[i] : 'Don\'t specify color')
+                item.setTitle(i >= 0 ? colorNames[i] : t('context-menu.dont-specify-color'))
                     .onClick((evt) => {
                         this.finish({ colorName: i >= 0 ? colorNames[i] : null }, evt);
                     });

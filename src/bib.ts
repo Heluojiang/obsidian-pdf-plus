@@ -158,11 +158,11 @@ export class BibliographyManager extends PDFPlusComponent {
                 });
                 anystyleProcess.on('error', (err: Error & { code: string }) => {
                     if ('code' in err && err.code === 'ENOENT') {
-                        const msg = `${plugin.manifest.name}: AnyStyle not found at the path "${anystylePath}".`;
+                        const msg = t('bib.anystyle-not-found-at-the-path.notice', { plugin: plugin.manifest.name, path: anystylePath });
                         if (plugin.settings.anystylePath) {
                             const notice = new Notice(msg, 8000);
                             notice.noticeEl.appendText(t('bib.click.help'));
-                            notice.noticeEl.createEl('a', { text: 'here' }, (anchorEl) => {
+                            notice.noticeEl.createEl('a', { text: t('bib.here') }, (anchorEl) => {
                                 anchorEl.addEventListener('click', () => {
                                     plugin.openSettingTab().scrollTo('anystylePath');
                                 });
@@ -349,7 +349,7 @@ export class BibliographyDom extends PDFPlusComponent {
         if (author) {
             this.containerEl.createDiv('', (el) => {
                 el.createDiv('bib-title', (el) => {
-                    el.setText(title?.[0] ?? 'No title');
+                    el.setText(title?.[0] ?? t('bib.no-title'));
                 });
                 el.createDiv('bib-author-year', (el) => {
                     const authorText = author
@@ -400,9 +400,9 @@ export class BibliographyDom extends PDFPlusComponent {
                 }
             } else {
                 if (this.bib.initialized) {
-                    this.containerEl.createDiv({ text: 'No bibliography found' });
+                    this.containerEl.createDiv({ text: t('bib.noBibliographyFound') });
                 } else {
-                    this.containerEl.createDiv({ text: 'Loading...' });
+                    this.containerEl.createDiv({ text: t('bib.loading') });
                     this.registerRenderOn('extracted');
                 }
             }

@@ -25,12 +25,12 @@ export class InstallerVersionModal extends PDFPlusModal {
         const name = this.plugin.manifest.name;
         this.setTitle(t('modalsInstallerVersionModal.obsidian-installer-update-is-required.title', { name: name }));
         this.contentEl.createEl('p', {
-            text: `Your Obsidian installer (${getInstallerVersion()}) is outdated and is incompatible with the latest ${name}. Please download the latest installer from Obsidian's website and re-install the Obsidian app.`,
+            text: t('modalsInstallerVersionModal.your-obsidian-installer-is-outdated', { v0: getInstallerVersion(), plugin: name }),
         });
 
         if (!requireApiVersion(minInstallerVersion)) {
             this.contentEl.createEl('p', {
-                text: `Also, in the very near future, Obsidian ${minInstallerVersion} or later will be required for you to be able to keep receiving updates of ${name}.`,
+                text: t('modalsInstallerVersionModal.min-installer-version-required', { v0: minInstallerVersion, plugin: name }),
             });
         }
 

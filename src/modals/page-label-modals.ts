@@ -57,7 +57,11 @@ class PDFPageLabelSettingsForRange {
             .setName(t('modalsPageLabelModals.numbering-style'))
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOptions({ ...PAGE_LABEL_NUMBERING_STYLES, None: 'None' })
+                    // The values of PAGE_LABEL_NUMBERING_STYLES are PDF-spec constants and must
+                    // not be translated. Only the "None" label is user-visible, while the option
+                    // key stays "None" because it is the value persisted in the page label dict.
+                    .addOptions({ ...PAGE_LABEL_NUMBERING_STYLES })
+                    .addOption('None', t('modalsPageLabelModals.numbering-style.option.none'))
                     .setValue(this.dict.style ?? 'None')
                     .onChange((value) => {
                         if (isPageLabelNumberingStyle(value)) this.dict.style = value;
@@ -107,15 +111,12 @@ export class PDFPageLabelEditModal extends PDFPageLabelModal {
     async onOpen() {
         super.onOpen();
 
-        this.titleEl.setText(`${this.plugin.manifest.name}: edit page labels`);
+        this.titleEl.setText(t('modalsPageLabelModals.edit-page-labels.title', { plugin: this.plugin.manifest.name }));
         new Setting(this.contentEl)
             .then((setting) => {
                 MarkdownRenderer.render(
                     this.app,
-                    [
-                        'Each page in a PDF document can be assigned a ***page label***, which can be different from the page index.',
-                        'For example, a book might have a preface numbered as "i", "ii", "iii", ... and the main content numbered as "1", "2", "3", ...',
-                    ].join(' '),
+                    t('modalsPageLabelModals.about-page-labels.desc'),
                     setting.descEl,
                     '',
                     this.component
@@ -125,7 +126,7 @@ export class PDFPageLabelEditModal extends PDFPageLabelModal {
 
         this.controlEl.createDiv({
             cls: 'page-labels-loading',
-            text: 'Loading...'
+            text: t('modalsPageLabelModals.loading')
         });
 
         await this.docLoadingPromise;
@@ -146,7 +147,7 @@ export class PDFPageLabelEditModal extends PDFPageLabelModal {
         this.controlEl.empty();
 
         if (pageLabels === null || pageLabels.rangeCount() === 0) {
-            this.addHeading(this.controlEl, 'No page labels found', 'lucide-info')
+            this.addHeading(this.controlEl, t('modalsPageLabelModals.no-page-labels-found'), 'lucide-info')
                 .setDesc(t('modalsPageLabelModals.this-pdf-document-does-not-have-any-page-lab.desc'))
                 .addButton((button) => {
                     button
@@ -178,7 +179,7 @@ export class PDFPageLabelEditModal extends PDFPageLabelModal {
             const afterNextRange = pageLabels.ranges[i + 2];
             const pageTo = pageLabels.getEndOfRange(i);
 
-            this.addHeading(rangeEl, `Page ${range.pageFrom}–${pageTo}`, 'lucide-arrow-down-01')
+            this.addHeading(rangeEl, t('modalsPageLabelModals.page-range', { v0: range.pageFrom, v1: pageTo }), 'lucide-arrow-down-01')
                 .then((setting) => {
                     if (pageTo > range.pageFrom) {
                         setting.addExtraButton((button) => {
@@ -244,7 +245,7 @@ export class PDFPageLabelEditModal extends PDFPageLabelModal {
                         .setDisabled(i === pageLabels.ranges.length - 1)
                         .then((text) => {
                             if (text.disabled) {
-                                setTooltip(text.inputEl, 'The last range cannot be extended.');
+                                setTooltip(text.inputEl, t('modalsPageLabelModals.the-last-range-cannot-be-extended.tooltip'));
                             }
                         });
                     text.inputEl.addEventListener('blur', () => this.redisplay(), { once: true });

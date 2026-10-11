@@ -893,7 +893,7 @@ const patchPDFViewerChild = (plugin: PDFPlus, child: PDFViewerChild) => {
 
                             iconContainerEl.createDiv('clickable-icon pdf-plus-copy-annotation-link', (iconEl) => {
                                 setIcon(iconEl, 'lucide-copy');
-                                setTooltip(iconEl, 'Copy link');
+                                setTooltip(iconEl, t('patchersPdfInternals.copy-link.tooltip'));
                                 iconEl.addEventListener('click', async () => {
                                     const palette = lib.getColorPaletteAssociatedWithNode(popupMetaEl);
                                     if (!palette) return;
@@ -913,7 +913,7 @@ const patchPDFViewerChild = (plugin: PDFPlus, child: PDFViewerChild) => {
                             const subtype = annotationElement.data.subtype;
                             iconContainerEl.createDiv('clickable-icon pdf-plus-edit-annotation', (editButtonEl) => {
                                 setIcon(editButtonEl, 'lucide-pencil');
-                                setTooltip(editButtonEl, 'Edit');
+                                setTooltip(editButtonEl, t('patchersPdfInternals.edit.tooltip'));
                                 editButtonEl.addEventListener('click', async () => {
                                     if (this.file) {
                                         PDFAnnotationEditModal
@@ -928,7 +928,7 @@ const patchPDFViewerChild = (plugin: PDFPlus, child: PDFViewerChild) => {
                         if (lib.isEditable(child) && plugin.settings.enableAnnotationDeletion) {
                             iconContainerEl.createDiv('clickable-icon pdf-plus-delete-annotation', (deleteButtonEl) => {
                                 setIcon(deleteButtonEl, 'lucide-trash');
-                                setTooltip(deleteButtonEl, 'Delete');
+                                setTooltip(deleteButtonEl, t('patchersPdfInternals.delete.tooltip'));
                                 deleteButtonEl.addEventListener('click', async () => {
                                     if (this.file) {
                                         new PDFAnnotationDeleteModal(plugin, this.file, page, id)
